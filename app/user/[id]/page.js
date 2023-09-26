@@ -2,7 +2,6 @@
 
 import DayEntryView from '@/app/components/DayEntryView';
 import DayEntryEdit from '@/app/components/DayEntryEdit';
-import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Container, Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -10,7 +9,7 @@ import moment from 'moment';
 import Header from '@/app/components/Header';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './page.module.css';
-import { getPerson, getPersons, updatePerson } from '@/app/database/firebase';
+import { getPerson, getStaticPersons, updatePerson } from '@/app/database/firebase';
 import ChartModal from '@/app/components/ChartModal';
 import { sortEntries } from '@/app/constants';
 
@@ -23,9 +22,12 @@ const fabStyle = {
   position: 'fixed',
 };
 
-export default function Home() {
+export async function generateStaticParams() {
+  const persons = await getPersons();
+  return persons.map(p => ({ id: p.userId }));
+}
 
-  const params = useParams();
+export default function Home({ params }) {
 
   const userId = params.id;
 
