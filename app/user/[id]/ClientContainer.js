@@ -111,6 +111,7 @@ export default function ClientContainer({ userId }) {
 
       {isEdit &&
       <DayEntryEdit 
+        user={user}
         entry={editEntry} 
         setEntry={setEditEntry}
         hideEdit={() => setIsEdit(false)} 

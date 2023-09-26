@@ -11,7 +11,7 @@ import { Stack, TextField } from '@mui/material';
 import { useState } from 'react';
 import { updatePropertyField } from '../constants';
 
-export default function DayEntryEdit({ entry, setEntry, open, hideEdit, save, remove }) {
+export default function DayEntryEdit({ user, entry, setEntry, open, hideEdit, save, remove }) {
 
   const [dateRequired, setDateRequired] = useState(false);
 
@@ -19,6 +19,11 @@ export default function DayEntryEdit({ entry, setEntry, open, hideEdit, save, re
     setDateRequired(!entry.date);
 
     if (entry.date) {
+      const dateAlreadyExists = user.entries.map(e => e.date).indexOf(entry.date) > -1;
+      if (dateAlreadyExists) {
+        alert('Date ' + entry.date + ' has already been logged.');
+        return;
+      }
       save();
       hideEdit();
     }
