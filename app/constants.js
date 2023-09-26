@@ -41,3 +41,10 @@ export const sortEntries = (entries, asc) => {
         return entries.sort((a, b) => moment(b.date).isBefore(a.date) ? 1 : -1);
     }
 }
+
+export const updatePropertyField = (obj, e) => {
+    return {
+        ...obj,
+        [e.target.name]: e.target.type === 'number' ? (!isNaN(parseFloat(e.target.value)) ? parseFloat(e.target.value) : '') : e.target.value
+    };
+}

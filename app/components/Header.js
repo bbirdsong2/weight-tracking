@@ -6,14 +6,12 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
+import { updatePropertyField } from '../constants';
 
 export default function Header({ user, updateUser }) {
 
   const handleChange = (e) => {
-    updateUser({
-      ...user,
-      [e.target.name]: e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value
-    });
+    updateUser(updatePropertyField(user, e));
   }
 
   return (

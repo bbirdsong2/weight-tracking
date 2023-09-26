@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack, TextField } from '@mui/material';
 import { useState } from 'react';
+import { updatePropertyField } from '../constants';
 
 export default function DayEntryEdit({ entry, setEntry, open, hideEdit, save, remove }) {
 
@@ -24,10 +25,7 @@ export default function DayEntryEdit({ entry, setEntry, open, hideEdit, save, re
   }
 
   const handleChange = (e) => {
-    setEntry({
-      ...entry,
-      [e.target.name]: e.target.type === 'number' ? (!isNaN(parseFloat(e.target.value)) ? parseFloat(e.target.value) : '') : e.target.value
-    });
+    setEntry(updatePropertyField(entry, e));
   }
 
   return (
