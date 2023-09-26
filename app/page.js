@@ -6,7 +6,7 @@ import styles from './page.module.css';
 export default function Home() {
   return (
     <main className={styles.main}>
-      Go to your user landing page by appending your userid to the url, ex. /myUserId
+      Go to your user landing page by appending your userid to the url, ex. user/[myUserId]
     </main>
   )
 }

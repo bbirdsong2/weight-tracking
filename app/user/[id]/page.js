@@ -2,6 +2,8 @@ import styles from './page.module.css';
 import ClientContainer from './ClientContainer';
 import { getPersons } from '@/app/database/firebase';
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const persons = await getPersons();
   return persons.map(p => ({ id: p.userId }));
