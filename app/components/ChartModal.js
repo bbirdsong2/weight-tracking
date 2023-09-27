@@ -5,9 +5,9 @@ import {
   calculateDayAverageLoss,
   sortEntries,
 } from "../constants";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
-import Graph from "./Graph";
+import TrackingGraph from "./TrackingGraph";
 import { getCharts } from "../charts";
 
 export default function ChartModal({ user }) {
@@ -94,7 +94,7 @@ export default function ChartModal({ user }) {
           </Stack>
 
           {getCharts(data, entries).map((c, i) => (
-            <Graph
+            <TrackingGraph
               key={i}
               desc={c.desc}
               tooltipName={c.tooltipName}
