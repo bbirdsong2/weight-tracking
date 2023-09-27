@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CartesianGrid,
   Line,
@@ -8,21 +10,52 @@ import {
   YAxis,
 } from "recharts";
 import InfoIcon from "@mui/icons-material/Info";
-import { IconButton } from "@mui/material";
+import { ClickAwayListener, IconButton } from "@mui/material";
 import MuiTooltip from "@mui/material/Tooltip";
+import { useState } from "react";
 
-export default function Graph({ label, tooltipName, desc, data, xAxisKey, dataKey, unit }) {
+export default function Graph({
+  label,
+  tooltipName,
+  desc,
+  data,
+  xAxisKey,
+  dataKey,
+  unit,
+}) {
   const vals = data.map((d) => d[dataKey]);
+
+  const [open, setOpen] = useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
 
   return (
     <>
       <h5 style={{ marginLeft: 10, color: "black" }}>
         {label}
-        <MuiTooltip title={desc}>
-          <IconButton>
-            <InfoIcon />
-          </IconButton>
-        </MuiTooltip>
+        <ClickAwayListener onClickAway={handleTooltipClose}>
+          <MuiTooltip
+            PopperProps={{
+              disablePortal: true,
+            }}
+            onClose={handleTooltipClose}
+            open={open}
+            disableFocusListener
+            disableHoverListener
+            disableTouchListener
+            title={desc}
+          >
+            <IconButton onClick={handleTooltipOpen}>
+              <InfoIcon />
+            </IconButton>
+          </MuiTooltip>
+        </ClickAwayListener>
       </h5>
       <ResponsiveContainer width="95%" height={300}>
         <LineChart data={data}>
