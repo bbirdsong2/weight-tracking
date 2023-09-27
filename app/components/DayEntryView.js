@@ -30,13 +30,24 @@ export default function DayEntryView({ user, entry, showEdit, remove }) {
 
   const metrics = [
     ["Estimated Calories", calculateDayMetabolicRate(user, entry), "kcals", "lightgrey"],
-    ["Weekly Average Intake", calculateAverageIntake(user, entry, 7), "kcals", "lightcyan"],
-    ["2 Week Average Intake", calculateAverageIntake(user, entry, 14), "kcals", "lightyellow"],
-    ["Monthly Average Intake", calculateAverageIntake(user, entry, 30), "kcals", "lightblue"],
-    ["Weekly Average Weight", calculateDayAverageLoss(user, entry, 7), "lbs", "lightcyan"],
-    ["2 Week Average Weight", calculateDayAverageLoss(user, entry, 14), "lbs", "lightyellow"],
-    ["Monthly Average Weight", calculateDayAverageLoss(user, entry, 30), "lbs", "lightblue"]
   ];
+
+  if (user.daysToAverage) {
+    metrics.push(
+      [`${user.daysToAverage} day Average Calories`, calculateAverageIntake(user, entry, user.daysToAverage), "kcals", "lightcyan"],
+      [`${user.daysToAverage} day Average Weight`, calculateDayAverageLoss(user, entry, user.daysToAverage), "lbs", "lightyellow"],
+    )
+  } else {
+    // Defaults
+    metrics.push(
+      ["Weekly Average Calories", calculateAverageIntake(user, entry, 7), "kcals", "lightcyan"],
+      ["2 Week Average Calories", calculateAverageIntake(user, entry, 14), "kcals", "lightyellow"],
+      ["Monthly Average Calories", calculateAverageIntake(user, entry, 30), "kcals", "lightblue"],
+      ["Weekly Average Weight", calculateDayAverageLoss(user, entry, 7), "lbs", "lightcyan"],
+      ["2 Week Average Weight", calculateDayAverageLoss(user, entry, 14), "lbs", "lightyellow"],
+      ["Monthly Average Weight", calculateDayAverageLoss(user, entry, 30), "lbs", "lightblue"]
+    );
+  }
 
   if (entry.steps) {
     metrics.push(["Steps", entry.steps, null, "seashell"])

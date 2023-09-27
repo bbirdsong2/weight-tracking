@@ -21,20 +21,22 @@ export default function Header({ user, updateUser }) {
       </AccordionSummary>
       <AccordionDetails>
         <Stack margin={2} spacing={2}>
-          <TextField required onChange={handleChange} name="birthDate" type="date" 
+          <TextField onChange={handleChange} name="birthDate" type="date" 
                 label="Birth Date" value={user.birthDate} InputLabelProps={{ shrink: true }} />
-          <TextField required onChange={handleChange} name="bodyFatPercentage" type="number"
+          <TextField onChange={handleChange} name="bodyFatPercentage" type="number"
                 label="Body Fat Percentage" value={user.bodyFatPercentage} InputLabelProps={{ shrink: true }} />
           <FormControl fullWidth>
             <InputLabel>Gender</InputLabel>
-            <Select required value={user.gender} label="Gender" name="gender" onChange={handleChange}>
+            <Select value={user.gender} label="Gender" name="gender" onChange={handleChange}>
               <MenuItem disabled value=""><em>Gender</em></MenuItem>
               <MenuItem value={"M"}>Male</MenuItem>
               <MenuItem value={"F"}>Female</MenuItem>
             </Select>
           </FormControl>
-          <TextField required onChange={handleChange} name="activityModifier" type="number"
-                label="Activity Modifier" value={user.activityModifier} InputLabelProps={{ shrink: true }} />
+          <TextField onChange={handleChange} name="activityModifier" type="number"
+                label="Activity Modifier (1.55 is relatively active)" value={user.activityModifier} InputLabelProps={{ shrink: true }} />
+          <TextField onChange={handleChange} name="daysToAverage" type="number" placeholder='Leave blank to show 7, 14, and 30 day averages'
+                label="Number of days to average weight and calories" value={user.daysToAverage} InputLabelProps={{ shrink: true }} />
         </Stack>
       </AccordionDetails>
     </Accordion>

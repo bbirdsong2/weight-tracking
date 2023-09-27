@@ -29,7 +29,7 @@ export const calculateDayMetabolicRate = (u, entry) => {
     const gender = u.gender === 'M' ? 1 : 0;
     const age = moment().diff(u.birthDate, 'years');
     const baseCals = (13.587 * leanBodyMass) + (9.613 * fatMass) + (198 * gender) - (3.351 * age) + 674;
-    const baseWithActivity = baseCals * (u.activityModifier);
+    const baseWithActivity = baseCals * (u.activityModifier ?? 1.55);
 
     return (baseWithActivity).toFixed();
 }
