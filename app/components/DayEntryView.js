@@ -29,7 +29,7 @@ export default function DayEntryView({ user, entry, showEdit, remove }) {
    */
 
   const metrics = [
-    ["Current Metabolic Rate", calculateDayMetabolicRate(user, entry), "kcals", "lightgrey"],
+    ["Estimated Calories", calculateDayMetabolicRate(user, entry), "kcals", "lightgrey"],
     ["Weekly Average Intake", calculateAverageIntake(user, entry, 7), "kcals", "lightcyan"],
     ["2 Week Average Intake", calculateAverageIntake(user, entry, 14), "kcals", "lightyellow"],
     ["Monthly Average Intake", calculateAverageIntake(user, entry, 30), "kcals", "lightblue"],
