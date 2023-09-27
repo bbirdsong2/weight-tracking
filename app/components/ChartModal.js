@@ -7,7 +7,7 @@ import {
 } from "../constants";
 import { Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
-import TrackingGraph from "./TrackingGraph";
+import Graph from "./Graph";
 import { getCharts } from "../charts";
 
 export default function ChartModal({ user }) {
@@ -94,7 +94,7 @@ export default function ChartModal({ user }) {
           </Stack>
 
           {getCharts(data, entries).map((c, i) => (
-            <TrackingGraph
+            <Graph
               key={i}
               desc={c.desc}
               tooltipName={c.tooltipName}
