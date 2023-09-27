@@ -19,10 +19,12 @@ export default function DayEntryEdit({ user, entry, setEntry, open, hideEdit, sa
     setDateRequired(!entry.date);
 
     if (entry.date) {
-      const dateAlreadyExists = user.entries.map(e => e.date).indexOf(entry.date) > -1;
-      if (dateAlreadyExists) {
-        alert('Date ' + entry.date + ' has already been logged.');
-        return;
+      if (!entry.id) {
+        const dateAlreadyExists = user.entries.map(e => e.date).indexOf(entry.date) > -1;
+        if (dateAlreadyExists) {
+          alert('Date ' + entry.date + ' has already been logged.');
+          return;
+        }
       }
       save();
       hideEdit();

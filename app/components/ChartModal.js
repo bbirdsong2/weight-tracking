@@ -1,122 +1,111 @@
 "use client";
 
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { calculateAverageIntake, calculateDayAverageLoss, sortEntries } from '../constants';
-import { Button, Stack, TextField } from '@mui/material';
-import { useState } from 'react';
+import {
+  calculateAverageIntake,
+  calculateDayAverageLoss,
+  sortEntries,
+} from "../constants";
+import { Button, Stack, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import Graph from "./Graph";
+import { getCharts } from "../charts";
 
 export default function ChartModal({ user }) {
+  const [show, setShow] = useState(false);
+  const [daysToGraph, setDaysToGraph] = useState(30);
+  const [daysToAverage, setDaysToAverage] = useState(7);
 
-    const [show, setShow] = useState(false);
-    const [days, setDays] = useState(30);
-    
-    const data = [];
-    var entries = [];
-    var lastEntry = {};
+  const data = [];
+  var entries = [];
 
-    if (days) {
-        const lastDayEntries = user.entries.slice(0, days);
-        entries = sortEntries(lastDayEntries, true);
-        for (var i = 1; i < entries.length; i++) {
-            const curEntry = entries[i - 1];
-            const nextEntry = entries[i];
-    
-            const curWeekWeight = calculateDayAverageLoss(user, curEntry, 7);
-            const nextWeekWeight = calculateDayAverageLoss(user, nextEntry, 7);
-    
-            const curWeekCalories = calculateAverageIntake(user, curEntry, 7);
-            const nextWeekCalories = calculateAverageIntake(user, nextEntry, 7);
-    
-            const prevDataWeightVariance = data.length > 0 ? data[i - 2].weightVariance : 0;
-            const prevDataCaloricVariance = data.length > 0 ? data[i - 2].caloricVariance : 0;
-            const prevWeightChange = data.length > 0 ? data[i - 2].weightChange : 0;
-            const prevCaloricChange = data.length > 0 ? data[i - 2].caloricChange : 0;
-    
-            data.push({
-                date: curEntry.date,
-                weightChange: ((nextWeekWeight - curWeekWeight)) + prevWeightChange,
-                caloricChange: ((nextWeekCalories - curWeekCalories)) + prevCaloricChange,
-                weightVariance: ((nextWeekWeight - curWeekWeight)),
-                caloricVariance: ((nextWeekCalories - curWeekCalories)),
-            });
-        }
+  if (daysToGraph && daysToAverage) {
+    const lastDayEntries = user.entries.slice(0, daysToGraph);
+    entries = sortEntries(lastDayEntries, true);
+    for (var i = 1; i < entries.length; i++) {
+      const curEntry = entries[i - 1];
+      const nextEntry = entries[i];
 
-        lastEntry = entries[0];
+      const curWeight = parseFloat(
+        calculateDayAverageLoss(user, curEntry, daysToAverage)
+      );
+      const nextWeight = parseFloat(
+        calculateDayAverageLoss(user, nextEntry, daysToAverage)
+      );
+
+      const curCalories = parseFloat(
+        calculateAverageIntake(user, curEntry, daysToAverage)
+      );
+      const nextCalories = parseFloat(
+        calculateAverageIntake(user, nextEntry, daysToAverage)
+      );
+
+      // i - 2 because i starts at 1
+      const prevWeightChange =
+        data.length > 0 ? data[i - 2].totalWeightChange : 0;
+      const prevCaloricChange =
+        data.length > 0 ? data[i - 2].totalCaloricChange : 0;
+
+      data.push({
+        date: curEntry.date,
+        totalWeightChange: nextWeight - curWeight + prevWeightChange,
+        totalCaloricChange: nextCalories - curCalories + prevCaloricChange,
+        dailyWeightChange: nextWeight - curWeight,
+        dailyCaloricChange: nextCalories - curCalories,
+      });
     }
+    data.forEach((e) => {
+      e.totalWeightChange = e.totalWeightChange.toFixed(2);
+      e.dailyWeightChange = e.dailyWeightChange.toFixed(2);
+    });
+  }
 
-    if (user.entries.length <= 1) {
-        return;
-    }
+  if (user.entries.length <= 1) {
+    return;
+  }
 
-    return (
+  return (
+    <>
+      <Button
+        sx={{ marginTop: 2, marginLeft: 2 }}
+        color="primary"
+        variant="contained"
+        size="small"
+        onClick={() => setShow(!show)}
+      >
+        {show ? "Hide" : "Show"} Charts
+      </Button>
+      {show && (
         <>
-            <Button sx={{marginTop: 2, marginLeft: 2}} color="primary" variant="contained" size="small" onClick={() => setShow(!show)}>{show ? 'Hide' : 'Show'} Charts</Button>
-            {show && 
-            <>
-                <Stack margin={2} spacing={2}>
-                    <TextField onChange={(e) => setDays(parseInt(e.target.value))} name="steps" type="number" label="Days" value={days} />
-                </Stack>
-                <h5 style={{marginTop: 10, color: 'black'}}>Weight Average</h5>
-                <ResponsiveContainer width="95%" height={300}>
-                    <LineChart data={entries}>
-                        <XAxis dataKey="date" />
-                        <YAxis domain={[lastEntry.weight - 10, lastEntry.weight + 10]} />
-                        <CartesianGrid stroke="black" strokeDasharray="5 5"/>
-                        <Line label="Weight" type="monotone" dataKey="weight" stroke="blue" />
-                    </LineChart>
-                </ResponsiveContainer>
+          <Stack style={{ marginBottom: 15 }} margin={2} spacing={2}>
+            <TextField
+              onChange={(e) => setDaysToGraph(parseInt(e.target.value))}
+              name="steps"
+              type="number"
+              label="Number of Days to show on Graph"
+              value={daysToGraph}
+            />
+            <TextField
+              onChange={(e) => setDaysToAverage(parseInt(e.target.value))}
+              name="steps"
+              type="number"
+              label="Number of Days used to average your Weight"
+              value={daysToAverage}
+            />
+          </Stack>
 
-                <h5 style={{color: 'black'}}>Weight Change</h5>
-                <ResponsiveContainer width="95%" height={300}>
-                    <LineChart data={data}>
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <CartesianGrid stroke="black" strokeDasharray="5 5"/>
-                        <Line label="Weight" type="monotone" dataKey="weightChange" stroke="blue" />
-                    </LineChart>
-                </ResponsiveContainer>
-
-                <h5 style={{color: 'black'}}>Weight Variance</h5>
-                <ResponsiveContainer width="95%" height={300}>
-                    <LineChart data={data}>
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <CartesianGrid stroke="black" strokeDasharray="5 5"/>
-                        <Line label="Weight" type="monotone" dataKey="weightVariance" stroke="blue" />
-                    </LineChart>
-                </ResponsiveContainer>
-
-                <h5 style={{color: 'black'}}>Caloric Average</h5>
-                <ResponsiveContainer width="95%" height={300}>
-                    <LineChart data={entries}>
-                        <XAxis dataKey="date" />
-                        <YAxis domain={[lastEntry.calories - 1000, lastEntry.calories + 1000]} />
-                        <CartesianGrid stroke="black" strokeDasharray="5 5"/>
-                        <Line label="Calories" type="monotone" dataKey="calories" stroke="blue" />
-                    </LineChart>
-                </ResponsiveContainer>
-
-                <h5 style={{color: 'black'}}>Caloric Change</h5>
-                <ResponsiveContainer width="95%" height={300}>
-                    <LineChart data={data}>
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <CartesianGrid stroke="black" strokeDasharray="5 5"/>
-                        <Line label="Weight" type="monotone" dataKey="caloricChange" stroke="blue" />
-                    </LineChart>
-                </ResponsiveContainer>
-
-                <h5 style={{color: 'black'}}>Caloric Variance</h5>
-                <ResponsiveContainer width="95%" height={300}>
-                    <LineChart data={data}>
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <CartesianGrid stroke="black" strokeDasharray="5 5"/>
-                        <Line label="Weight" type="monotone" dataKey="caloricVariance" stroke="blue" />
-                    </LineChart>
-                </ResponsiveContainer>
-            </>
-            }
+          {getCharts(data, entries).map((c, i) => (
+            <Graph
+              key={i}
+              desc={c.desc}
+              label={c.label}
+              data={c.data}
+              xAxisKey={c.xAxisKey}
+              dataKey={c.dataKey}
+              unit={c.unit}
+            />
+          ))}
         </>
-    )
+      )}
+    </>
+  );
 }
