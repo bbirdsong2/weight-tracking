@@ -97,6 +97,7 @@ export default function ChartModal({ user }) {
             <Graph
               key={i}
               desc={c.desc}
+              tooltipName={c.tooltipName}
               label={c.label}
               data={c.data}
               xAxisKey={c.xAxisKey}
