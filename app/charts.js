@@ -1,0 +1,58 @@
+export const getCharts = (data, entries) => {
+  return [
+    {
+      label: "Daily Weight",
+      tooltipName: "Weight",
+      desc: "This chart shows your daily recorded weight",
+      data: entries,
+      xAxisKey: "date",
+      dataKey: "weight",
+      unit: "lbs",
+    },
+    {
+      label: "Total Weight Change",
+      tooltipName: "Total Change",
+      desc: "This chart shows your averaged weight change over time.",
+      data: data,
+      xAxisKey: "date",
+      dataKey: "totalWeightChange",
+      unit: "lbs",
+    },
+    {
+      label: "Daily Weight Change",
+      tooltipName: "Daily Change",
+      desc: "This chart shows your averaged weight change per day.",
+      data: data,
+      xAxisKey: "date",
+      dataKey: "dailyWeightChange",
+      unit: "lbs",
+    },
+    {
+      label: "Daily Caloric Intake",
+      tooltipName: "Calories",
+      desc: "This chart shows your daily recorded calories",
+      data: entries,
+      xAxisKey: "date",
+      dataKey: "calories",
+      unit: "kcals",
+    },
+    {
+      label: "Total Caloric Change",
+      tooltipName: "Total Change",
+      desc: "This chart shows your averaged caloric intake change over time.",
+      data: data,
+      xAxisKey: "date",
+      dataKey: "totalCaloricChange",
+      unit: "kcals",
+    },
+    {
+      label: "Daily Caloric Change",
+      tooltipName: "Daily Change",
+      desc: "This chart shows your averaged caloric intake change per day.",
+      data: data,
+      xAxisKey: "date",
+      dataKey: "dailyCaloricChange",
+      unit: "kcals",
+    },
+  ];
+};
