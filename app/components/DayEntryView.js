@@ -13,7 +13,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
-import FireplaceIcon from '@mui/icons-material/Fireplace';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
 import { calculateDayMetabolicRate, calculateAverageIntake, calculateDayAverageLoss } from '../constants';
 
 export default function DayEntryView({ user, entry, showEdit, remove }) {
@@ -51,7 +51,7 @@ export default function DayEntryView({ user, entry, showEdit, remove }) {
           <Typography variant="subtitle2">{moment(entry.date).format("MM/DD")}</Typography>
         </Typography>
         {entry.weight && <Chip size="small" sx={{ marginLeft: 1 }} icon={<MonitorWeightIcon />} label={entry.weight} />}
-        {entry.calories && <Chip size="small" sx={{ marginLeft: 1 }} icon={<FireplaceIcon />} label={entry.calories} />}
+        {entry.calories && <Chip size="small" sx={{ marginLeft: 1 }} icon={<FastfoodIcon />} label={entry.calories} />}
       </AccordionSummary>
       <AccordionDetails>
         <Table size="small">
