@@ -11,10 +11,12 @@ export default function ChartModal({ user }) {
     const [days, setDays] = useState(30);
     
     const data = [];
+    var entries = [];
+    var lastEntry = {};
 
     if (days) {
         const lastDayEntries = user.entries.slice(0, days);
-        const entries = sortEntries(lastDayEntries, true);
+        entries = sortEntries(lastDayEntries, true);
         for (var i = 1; i < entries.length; i++) {
             const curEntry = entries[i - 1];
             const nextEntry = entries[i];
@@ -38,13 +40,13 @@ export default function ChartModal({ user }) {
                 caloricVariance: ((nextWeekCalories - curWeekCalories)),
             });
         }
+
+        lastEntry = entries[0];
     }
 
     if (user.entries.length <= 1) {
         return;
     }
-
-    var lastEntry = entries[0];
 
     return (
         <>
