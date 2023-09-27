@@ -11,30 +11,33 @@ export default function ChartModal({ user }) {
     const [days, setDays] = useState(30);
     
     const data = [];
-    const lastDayEntries = user.entries.slice(0, days);
-    const entries = sortEntries(lastDayEntries, true);
-    for (var i = 1; i < entries.length; i++) {
-        const curEntry = entries[i - 1];
-        const nextEntry = entries[i];
 
-        const curWeekWeight = calculateDayAverageLoss(user, curEntry, 7);
-        const nextWeekWeight = calculateDayAverageLoss(user, nextEntry, 7);
-
-        const curWeekCalories = calculateAverageIntake(user, curEntry, 7);
-        const nextWeekCalories = calculateAverageIntake(user, nextEntry, 7);
-
-        const prevDataWeightVariance = data.length > 0 ? data[i - 2].weightVariance : 0;
-        const prevDataCaloricVariance = data.length > 0 ? data[i - 2].caloricVariance : 0;
-        const prevWeightChange = data.length > 0 ? data[i - 2].weightChange : 0;
-        const prevCaloricChange = data.length > 0 ? data[i - 2].caloricChange : 0;
-
-        data.push({
-            date: curEntry.date,
-            weightChange: ((nextWeekWeight - curWeekWeight)) + prevWeightChange,
-            caloricChange: ((nextWeekCalories - curWeekCalories)) + prevCaloricChange,
-            weightVariance: ((nextWeekWeight - curWeekWeight)),
-            caloricVariance: ((nextWeekCalories - curWeekCalories)),
-        });
+    if (days) {
+        const lastDayEntries = user.entries.slice(0, days);
+        const entries = sortEntries(lastDayEntries, true);
+        for (var i = 1; i < entries.length; i++) {
+            const curEntry = entries[i - 1];
+            const nextEntry = entries[i];
+    
+            const curWeekWeight = calculateDayAverageLoss(user, curEntry, 7);
+            const nextWeekWeight = calculateDayAverageLoss(user, nextEntry, 7);
+    
+            const curWeekCalories = calculateAverageIntake(user, curEntry, 7);
+            const nextWeekCalories = calculateAverageIntake(user, nextEntry, 7);
+    
+            const prevDataWeightVariance = data.length > 0 ? data[i - 2].weightVariance : 0;
+            const prevDataCaloricVariance = data.length > 0 ? data[i - 2].caloricVariance : 0;
+            const prevWeightChange = data.length > 0 ? data[i - 2].weightChange : 0;
+            const prevCaloricChange = data.length > 0 ? data[i - 2].caloricChange : 0;
+    
+            data.push({
+                date: curEntry.date,
+                weightChange: ((nextWeekWeight - curWeekWeight)) + prevWeightChange,
+                caloricChange: ((nextWeekCalories - curWeekCalories)) + prevCaloricChange,
+                weightVariance: ((nextWeekWeight - curWeekWeight)),
+                caloricVariance: ((nextWeekCalories - curWeekCalories)),
+            });
+        }
     }
 
     if (user.entries.length <= 1) {
