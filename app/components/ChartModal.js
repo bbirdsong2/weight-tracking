@@ -3,6 +3,7 @@
 import {
   calculateAverageIntake,
   calculateDayAverageLoss,
+  calculateDayMetabolicRate,
   sortEntries,
 } from "../constants";
 import { Button, Stack, TextField } from "@mui/material";
@@ -25,6 +26,10 @@ export default function ChartModal({ user }) {
       const curEntry = entries[i - 1];
       const nextEntry = entries[i];
 
+      const curBasalRate = parseFloat(
+        calculateDayMetabolicRate(user, curEntry)
+      );
+
       const curWeight = parseFloat(
         calculateDayAverageLoss(user, curEntry, daysToAverage)
       );
@@ -40,17 +45,21 @@ export default function ChartModal({ user }) {
       );
 
       // i - 2 because i starts at 1
-      const prevWeightChange =
-        data.length > 0 ? data[i - 2].totalWeightChange : 0;
-      const prevCaloricChange =
-        data.length > 0 ? data[i - 2].totalCaloricChange : 0;
+      const prevWeightChange = data.length > 0 ? data[i - 2].totalWeightChange : 0;
+      // const prevCaloricChange =
+      //   data.length > 0 ? data[i - 2].totalCaloricChange : 0;
+      const prevCaloricDiff = data.length > 0 ? data[i - 2].totalCaloricDiff : 0;
+      const prevCaloricBasalDiff = data.length > 0 ? data[i - 2].totalCaloricBasalDiff : 0;
 
       data.push({
         date: curEntry.date,
         totalWeightChange: nextWeight - curWeight + prevWeightChange,
-        totalCaloricChange: nextCalories - curCalories + prevCaloricChange,
+        // totalCaloricChange: nextCalories - curCalories + prevCaloricChange,
         dailyWeightChange: nextWeight - curWeight,
         dailyCaloricChange: nextCalories - curCalories,
+        dailyActualCaloricChange: nextEntry.calories - curEntry.calories,
+        totalCaloricDiff: curEntry.calories - curCalories + prevCaloricDiff,
+        totalCaloricBasalDiff: curEntry.calories - curBasalRate + prevCaloricBasalDiff,
       });
     }
     data.forEach((e) => {
