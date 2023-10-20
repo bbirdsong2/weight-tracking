@@ -14,7 +14,7 @@ import { getCharts } from "../charts";
 export default function ChartModal({ user }) {
   const [show, setShow] = useState(false);
   const [daysToGraph, setDaysToGraph] = useState(30);
-  const [daysToAverage, setDaysToAverage] = useState(user.daysToAverage ?? 7);
+  const [daysToAverage, setDaysToAverage] = useState(user.daysToAverage ? user.daysToAverage : 7);
 
   const data = [];
   var entries = [];
