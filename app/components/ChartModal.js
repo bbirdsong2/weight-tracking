@@ -11,13 +11,22 @@ import { useState } from "react";
 import Graph from "./Graph";
 import { getCharts } from "../charts";
 
-export default function ChartModal({ user }) {
+export default function ChartModal({ user, updateUser }) {
   const [show, setShow] = useState(false);
-  const [daysToGraph, setDaysToGraph] = useState(30);
+  const [daysToGraph, setDaysToGraph] = useState(user.daysToGraph ? user.daysToGraph : 30);
   const [daysToAverage, setDaysToAverage] = useState(user.daysToAverage ? user.daysToAverage : 7);
 
   const data = [];
   var entries = [];
+
+  var changeDaysToGraph = (e) => {
+    var newDaysToGraph = parseInt(e.target.value);
+    setDaysToGraph(newDaysToGraph);
+    updateUser({
+      ...user,
+      daysToGraph: newDaysToGraph
+    });
+  };
 
   if (daysToGraph && daysToAverage) {
     const lastDayEntries = user.entries.slice(0, daysToGraph);
@@ -87,7 +96,7 @@ export default function ChartModal({ user }) {
         <>
           <Stack style={{ marginBottom: 15 }} margin={2} spacing={2}>
             <TextField
-              onChange={(e) => setDaysToGraph(parseInt(e.target.value))}
+              onChange={changeDaysToGraph}
               name="steps"
               type="number"
               label="Number of Days to show on Graph"

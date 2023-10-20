@@ -98,7 +98,7 @@ export default function ClientContainer({ userId }) {
     <>
       <Header user={user} updateUser={updateUser} />
 
-      <ChartModal user={user} />
+      <ChartModal user={user} updateUser={updateUser} />
 
       <Container sx={{ padding: 2 }}>
         {user.entries.map(e => <DayEntryView 
