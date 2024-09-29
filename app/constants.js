@@ -58,35 +58,35 @@ export const getDayViewMetrics = (user, entry, prev) => {
         avgWeight: parseFloat(calculateDayAverageLoss(user, entry, user.daysToAverage ?? daysToAverageDefault))
     };
 
-    let estCalUnit = "kcals",
-        avgCalUnit = "kcals",
-        avgWeightUnit = "lbs";
+    let estCalDif = "",
+        avgCalDif = "",
+        avgWeightDif = "";
 
     if (prev) {
-        estCalUnit += ` (${convert(current.estCals - prev.estCals, 0)})`;
-        avgCalUnit += ` (${convert(current.avgCals - prev.avgCals, 0)})`;
-        avgWeightUnit += ` (${convert(current.avgWeight - prev.avgWeight)})`;
+        estCalDif += ` (${convert(current.estCals - prev.estCals, 0)})`;
+        avgCalDif += entry.calories ? ` (${convert(current.avgCals - prev.avgCals, 0)})` : "";
+        avgWeightDif += entry.weight ? ` (${convert(current.avgWeight - prev.avgWeight)})` : "";
     }
 
     const metrics = [
-        ["Estimated Calories", current.estCals, estCalUnit, "lightgrey"],
+        ["Estimated Calories", current.estCals, "kcals", "lightgrey", estCalDif],
       ];
 
       if (user.daysToAverage) {
 
         metrics.push(
-          [`${user.daysToAverage} day Average Calories`, current.avgCals, avgCalUnit, "lightcyan"],
-          [`${user.daysToAverage} day Average Weight`, current.avgWeight, avgWeightUnit, "lightyellow"],
+          [`${user.daysToAverage} day Average Calories`, current.avgCals, "kcals", "lightcyan", avgCalDif],
+          [`${user.daysToAverage} day Average Weight`, current.avgWeight, "lbs", "lightyellow", avgWeightDif],
         )
       } else {
         // Defaults
         metrics.push(
-          ["Weekly Average Calories", calculateAverageIntake(user, entry, 7), "kcals", "lightcyan"],
-          ["2 Week Average Calories", calculateAverageIntake(user, entry, daysToAverageDefault), "kcals", "lightyellow"],
-          ["Monthly Average Calories", calculateAverageIntake(user, entry, 30), "kcals", "lightblue"],
-          ["Weekly Average Weight", calculateDayAverageLoss(user, entry, 7), "lbs", "lightcyan"],
-          ["2 Week Average Weight", calculateDayAverageLoss(user, entry, daysToAverageDefault), "lbs", "lightyellow"],
-          ["Monthly Average Weight", calculateDayAverageLoss(user, entry, 30), "lbs", "lightblue"]
+          ["Weekly Average Calories", calculateAverageIntake(user, entry, 7), "kcals", "lightcyan", ""],
+          ["2 Week Average Calories", calculateAverageIntake(user, entry, daysToAverageDefault), "kcals", "lightyellow", ""],
+          ["Monthly Average Calories", calculateAverageIntake(user, entry, 30), "kcals", "lightblue", ""],
+          ["Weekly Average Weight", calculateDayAverageLoss(user, entry, 7), "lbs", "lightcyan", ""],
+          ["2 Week Average Weight", calculateDayAverageLoss(user, entry, daysToAverageDefault), "lbs", "lightyellow", ""],
+          ["Monthly Average Weight", calculateDayAverageLoss(user, entry, 30), "lbs", "lightblue", ""]
         );
       }
 
@@ -101,6 +101,7 @@ export const getDayViewMetrics = (user, entry, prev) => {
             value: m[1],
             unit: m[2],
             color: m[3],
+            append: m[4],
           })),
       };
 }

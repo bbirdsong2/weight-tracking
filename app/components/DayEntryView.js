@@ -44,7 +44,11 @@ export default function DayEntryView({ user, entry, metrics, showEdit, remove })
             {metrics.map(m =>
               <TableRow key={m.name} sx={{backgroundColor: m.color}}>
                 <TableCell scope="row">{m.name}</TableCell>
-                <TableCell>{isNaN(m.value) ? "--" : m.value} {m.unit}</TableCell>
+                <TableCell>{
+                  isNaN(m.value) ? "--" : m.value}
+                  {m.unit}
+                  {m.append ? <span style={{color: "darkgrey", fontSize: "12px"}}>{m.append}</span> : ""}
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
