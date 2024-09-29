@@ -45,8 +45,7 @@ export default function DayEntryView({ user, entry, metrics, showEdit, remove })
               <TableRow key={m.name} sx={{backgroundColor: m.color}}>
                 <TableCell scope="row">{m.name}</TableCell>
                 <TableCell>{
-                  isNaN(m.value) ? "--" : m.value}
-                  {m.unit}
+                  isNaN(m.value) ? "--" : m.value} {m.unit}
                   {m.append ? <span style={{color: "darkgrey", fontSize: "12px"}}>{m.append}</span> : ""}
                 </TableCell>
               </TableRow>
