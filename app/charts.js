@@ -19,6 +19,15 @@ export const getCharts = (data, entries) => {
       unit: "kcals",
     },
     {
+      label: "Total AVERAGED Caloric Change",
+      tooltipName: "Total Change",
+      desc: "This chart shows your total caloric intake over time based on your AVERAGED calories. This will tell you if you are generally eating more or less over time.",
+      data: data,
+      xAxisKey: "date",
+      dataKey: "totalCaloricDiff",
+      unit: "kcals",
+    },
+    {
       label: "Daily Weight",
       tooltipName: "Weight",
       desc: "This chart shows your daily recorded weight.",
@@ -52,15 +61,6 @@ export const getCharts = (data, entries) => {
       data: data,
       xAxisKey: "date",
       dataKey: "dailyActualCaloricChange",
-      unit: "kcals",
-    },
-    {
-      label: "Total AVERAGED Caloric Change",
-      tooltipName: "Total Change",
-      desc: "This chart shows your total caloric intake over time based on your AVERAGED calories. This will tell you if you are generally eating more or less over time.",
-      data: data,
-      xAxisKey: "date",
-      dataKey: "totalCaloricDiff",
       unit: "kcals",
     },
     // {

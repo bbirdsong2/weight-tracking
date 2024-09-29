@@ -10,7 +10,7 @@ import Header from '@/app/components/Header';
 import { v4 as uuidv4 } from 'uuid';
 import { getPerson, updatePerson } from '@/app/database/firebase';
 import ChartModal from '@/app/components/ChartModal';
-import { sortEntries } from '@/app/constants';
+import { sortEntries, getDayViewMetrics } from '@/app/constants';
 
 const fabStyle = {
   margin: 0,
@@ -94,20 +94,36 @@ export default function ClientContainer({ userId }) {
     return <>Loading...</>;
   }
 
+  // This function reverses the array so we can iterate in day order and calc diff changes from the prev day
+  // Then it reverses again to display in correct order.
+  const loadEntryView = () => {
+    let prev;
+    let entries = [...user.entries];
+    entries.reverse();
+    const map = entries.map(e => {
+      let { metrics, current } = getDayViewMetrics(user, e, prev);
+      prev = current;
+
+      return <DayEntryView
+        key={e.id}
+        user={user}
+        entry={e}
+        metrics={metrics}
+        showEdit={() => openEdit(e)}
+        remove={() => removeEntry(e)} />;
+    });
+
+    map.reverse();
+    return map;
+  };
+
   return (
     <>
       <Header user={user} updateUser={updateUser} />
 
       <ChartModal user={user} updateUser={updateUser} />
 
-      <Container sx={{ padding: 2 }}>
-        {user.entries.map(e => <DayEntryView 
-                                  key={e.id} 
-                                  user={user} 
-                                  entry={e} 
-                                  showEdit={() => openEdit(e)}
-                                  remove={() => removeEntry(e)} />)}
-      </Container>
+      <Container sx={{ padding: 2 }}>{loadEntryView()}</Container>
 
       {isEdit &&
       <DayEntryEdit 

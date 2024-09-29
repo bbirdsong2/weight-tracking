@@ -14,9 +14,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
-import { calculateDayMetabolicRate, calculateAverageIntake, calculateDayAverageLoss } from '../constants';
 
-export default function DayEntryView({ user, entry, showEdit, remove }) {
+export default function DayEntryView({ user, entry, metrics, showEdit, remove }) {
 
   /**
    * TODO:
@@ -27,31 +26,6 @@ export default function DayEntryView({ user, entry, showEdit, remove }) {
    *      - i.e. add input to select which day to compare, (7 days ago, 1 day ago, etc.)
    *      - then show the diff against the current day calc's
    */
-
-  const metrics = [
-    ["Estimated Calories", calculateDayMetabolicRate(user, entry), "kcals", "lightgrey"],
-  ];
-
-  if (user.daysToAverage) {
-    metrics.push(
-      [`${user.daysToAverage} day Average Calories`, calculateAverageIntake(user, entry, user.daysToAverage), "kcals", "lightcyan"],
-      [`${user.daysToAverage} day Average Weight`, calculateDayAverageLoss(user, entry, user.daysToAverage), "lbs", "lightyellow"],
-    )
-  } else {
-    // Defaults
-    metrics.push(
-      ["Weekly Average Calories", calculateAverageIntake(user, entry, 7), "kcals", "lightcyan"],
-      ["2 Week Average Calories", calculateAverageIntake(user, entry, 14), "kcals", "lightyellow"],
-      ["Monthly Average Calories", calculateAverageIntake(user, entry, 30), "kcals", "lightblue"],
-      ["Weekly Average Weight", calculateDayAverageLoss(user, entry, 7), "lbs", "lightcyan"],
-      ["2 Week Average Weight", calculateDayAverageLoss(user, entry, 14), "lbs", "lightyellow"],
-      ["Monthly Average Weight", calculateDayAverageLoss(user, entry, 30), "lbs", "lightblue"]
-    );
-  }
-
-  if (entry.steps) {
-    metrics.push(["Steps", entry.steps, null, "seashell"])
-  }
 
   return (
     <>
@@ -67,10 +41,10 @@ export default function DayEntryView({ user, entry, showEdit, remove }) {
       <AccordionDetails>
         <Table size="small">
           <TableBody>
-            {metrics.map(m => 
-              <TableRow key={m[0]} sx={{backgroundColor: m[3]}}>
-                <TableCell scope="row">{m[0]}</TableCell>
-                <TableCell>{isNaN(m[1]) ? "--" : m[1]} {m[2]}</TableCell>
+            {metrics.map(m =>
+              <TableRow key={m.name} sx={{backgroundColor: m.color}}>
+                <TableCell scope="row">{m.name}</TableCell>
+                <TableCell>{isNaN(m.value) ? "--" : m.value} {m.unit}</TableCell>
               </TableRow>
             )}
           </TableBody>
