@@ -51,33 +51,57 @@ export const updatePropertyField = (obj, e) => {
     };
 }
 
-export const getDayViewMetrics = (user, entry, prev) => {
+const getDeltaMetrics = (i, current, averages, days, metric) => {
+    let deltas = [];
+    days.forEach(day => {
+        if (averages.length >= day.lookback) {
+            const prev = averages[i - day.lookback];
+            deltas.push([`- ${day.name} ${metric.name} Change`, convert(current[metric.prop] - prev[metric.prop]), metric.label, metric.color]);
+        }
+    });
+
+    return deltas;
+}
+
+export const getDayViewMetrics = (user, entry, i, averages) => {
     const current = {
         estCals: parseFloat(calculateDayMetabolicRate(user, entry)),
-        avgCals: parseFloat(calculateAverageIntake(user, entry, user.daysToAverage ?? daysToAverageDefault)),
-        avgWeight: parseFloat(calculateDayAverageLoss(user, entry, user.daysToAverage ?? daysToAverageDefault))
+        avgCals: entry.calories ? parseFloat(calculateAverageIntake(user, entry, user.daysToAverage ?? daysToAverageDefault)) : "NoData",
+        avgWeight: entry.weight ? parseFloat(calculateDayAverageLoss(user, entry, user.daysToAverage ?? daysToAverageDefault)) : "NoData",
     };
 
     let estCalDif = "",
         avgCalDif = "",
         avgWeightDif = "";
 
-    if (prev) {
-        estCalDif += ` (${convert(current.estCals - prev.estCals, 0)})`;
-        avgCalDif += entry.calories ? ` (${convert(current.avgCals - prev.avgCals, 0)})` : "";
-        avgWeightDif += entry.weight ? ` (${convert(current.avgWeight - prev.avgWeight)})` : "";
-    }
+    // NOTE: Removing this for now since added as individual metrics
+    // if (averages.length >= 1) {
+    //     const prev = averages[i - 1];
+    //     estCalDif += ` (${convert(current.estCals - prev.estCals, 0)})`;
+    //     avgCalDif += entry.calories ? ` (${convert(current.avgCals - prev.avgCals, 0)})` : "";
+    //     avgWeightDif += entry.weight ? ` (${convert(current.avgWeight - prev.avgWeight)})` : "";
+    // }
 
     const metrics = [
         ["Estimated Calories", current.estCals, "kcals", "lightgrey", estCalDif],
       ];
 
       if (user.daysToAverage) {
+        const deltaMetrics = [
+            { lookback: 1, name: "Daily" }, { lookback: 7, name: "Weekly" }, { lookback: 30, name: "Monthly" }
+        ];
 
-        metrics.push(
-          [`${user.daysToAverage} day Average Calories`, current.avgCals, "kcals", "lightcyan", avgCalDif],
-          [`${user.daysToAverage} day Average Weight`, current.avgWeight, "lbs", "lightyellow", avgWeightDif],
-        )
+        const definedMetrics = [
+            { prop: "avgWeight", name: "Weight", label: "lbs", color: "lightyellow", avgDif: avgWeightDif},
+            { prop: "avgCals", name: "Calorie", label: "kcals", color: "lightcyan", avgDif: avgCalDif},
+        ];
+
+        definedMetrics.forEach(metric => {
+            metrics.push(
+                [`${user.daysToAverage} day ${metric.name} Average`, current[metric.prop], metric.label, metric.color, metric.avgDif],
+                ...getDeltaMetrics(i, current, averages, deltaMetrics, metric),
+            );
+        });
       } else {
         // Defaults
         metrics.push(
@@ -91,11 +115,13 @@ export const getDayViewMetrics = (user, entry, prev) => {
       }
 
       if (entry.steps) {
-        metrics.push(["Steps", entry.steps, null, "seashell"])
+        metrics.push(["Steps", entry.steps, null, "seashell"]);
       }
 
+      averages.push(current);
+
       return {
-        current,
+        updatedAverages: averages,
         metrics: metrics.map(m => ({
             name: m[0],
             value: m[1],

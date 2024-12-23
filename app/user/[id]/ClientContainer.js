@@ -97,12 +97,12 @@ export default function ClientContainer({ userId }) {
   // This function reverses the array so we can iterate in day order and calc diff changes from the prev day
   // Then it reverses again to display in correct order.
   const loadEntryView = () => {
-    let prev;
+    let averages = [];
     let entries = [...user.entries];
     entries.reverse();
-    const map = entries.map(e => {
-      let { metrics, current } = getDayViewMetrics(user, e, prev);
-      prev = current;
+    const map = entries.map((e, i) => {
+      let { metrics, updatedAverages } = getDayViewMetrics(user, e, i, averages);
+      averages = updatedAverages;
 
       return <DayEntryView
         key={e.id}
