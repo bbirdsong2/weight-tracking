@@ -34,21 +34,11 @@ export default function Home() {
     router.push(`/user?uid=${id}`);
   }
 
+  // Look at code in txt to fill out this page
+  // Can fill in once you cap
   return (
-    <main className={styles.main}>
-    <TextField
-      sx={{ marginTop: 2, marginLeft: 2 }}
-      size='small'
-      onChange={(e) => {setName(e.target.value)}}
-      name="Name"
-      type="text"
-      label="Name"
-      value={name} />
-    <Button
-        sx={{ marginTop: 2, marginLeft: 2 }}
-        color="primary"
-        variant="contained"
-        onClick={() => register()}>Register</Button>
+    <main>
+      Coming Soon...
     </main>
   )
 }
