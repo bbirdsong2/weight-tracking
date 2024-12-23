@@ -1,5 +1,5 @@
-import styles from './page.module.css';
-import ClientContainer from './ClientContainer';
+import styles from '../page.module.css';
+import ClientContainer from '@/app/components/ClientContainer';
 import { getPersons } from '@/app/database/firebase';
 
 export const dynamicParams = true;

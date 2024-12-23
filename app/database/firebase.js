@@ -57,3 +57,7 @@ export const getPersons = async function (q) {
 export const updatePerson = async function (p) {
     await updateDoc(doc(db, "persons", p.id), p);
 }
+
+export const setPerson = async function (p) {
+    await setDoc(doc(db, "persons", p.id), p);
+}
