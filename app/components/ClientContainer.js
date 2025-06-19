@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import DayEntryView from '@/app/components/DayEntryView';
 import DayEntryEdit from '@/app/components/DayEntryEdit';
@@ -13,131 +13,139 @@ import ChartModal from '@/app/components/ChartModal';
 import { sortEntries, getDayViewMetrics } from '@/app/constants';
 
 const fabStyle = {
-  margin: 0,
-  top: 'auto',
-  right: 20,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed',
+    margin: 0,
+    top: 'auto',
+    right: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
 };
 
 export default function ClientContainer({ userId }) {
+    /**
+     * @type {ReturnType<any>}
+     */
+    const [user, setUser] = useState();
+    const [isEdit, setIsEdit] = useState(false);
+    /**
+     * @type {ReturnType<any>}
+     */
+    const [editEntry, setEditEntry] = useState();
 
-  const getPersonById = async () => {
-    var person = await getPerson(userId);
-    
-    if (!person.entries) {
-      person.entries = [];
-      person.gender = '';
-      person.bodyFatPercentage = '';
-      person.birthDate = '';
-      person.activityModifier = 1.25;
+    const getPersonById = async () => {
+        /**
+         * @type {ReturnType<any>}
+         */
+        var person = await getPerson(userId);
+
+        if (!person.entries) {
+            person.entries = [];
+            person.gender = '';
+            person.bodyFatPercentage = '';
+            person.birthDate = '';
+            person.activityModifier = 1.25;
+        }
+
+        setUser(person);
+    };
+
+    useEffect(() => {
+        getPersonById();
+    }, []);
+
+    const addNewEntry = () => {
+        openEdit({
+            date: moment().format('YYYY-MM-DD'),
+            weight: '',
+            calories: '',
+            steps: '',
+        });
+    };
+
+    const openEdit = (entry) => {
+        setEditEntry(entry);
+        setIsEdit(true);
+    };
+
+    const saveEntry = async () => {
+        const newEntries = [...user.entries];
+        if (editEntry.id) {
+            const i = newEntries.findIndex((e) => e.id === editEntry.id);
+            newEntries.splice(i, 1, editEntry);
+        } else {
+            newEntries.push({
+                id: uuidv4(),
+                ...editEntry,
+            });
+        }
+
+        updateUser({
+            ...user,
+            entries: sortEntries(newEntries),
+        });
+    };
+
+    const removeEntry = (rEntry) => {
+        updateUser({
+            ...user,
+            entries: user.entries.filter((e) => e.id !== rEntry.id),
+        });
+    };
+
+    const updateUser = async (updatedUser) => {
+        setUser(updatedUser);
+        await updatePerson(updatedUser);
+    };
+
+    if (!user) {
+        return <>Loading...</>;
     }
 
-    setUser(person);
-  }
+    // This function reverses the array so we can iterate in day order and calc diff changes from the prev day
+    // Then it reverses again to display in correct order.
+    const loadEntryView = () => {
+        if (isEdit) {
+            return [];
+        }
+        let averages = [];
+        let entries = [...user.entries];
+        entries.reverse();
+        const map = entries.map((e, i) => {
+            console.log('blah');
+            let { metrics, updatedAverages } = getDayViewMetrics(user, e, i, averages);
+            averages = updatedAverages;
 
-  useEffect(() => {
-    getPersonById();
-  }, []);
+            return <DayEntryView key={e.id} user={user} entry={e} metrics={metrics} showEdit={() => openEdit(e)} remove={() => removeEntry(e)} />;
+        });
 
-  const [user, setUser] = useState();
+        map.reverse();
+        return map;
+    };
 
-  const [isEdit, setIsEdit] = useState(false);
-  const [editEntry, setEditEntry] = useState();
+    return (
+        <>
+            <Header user={user} updateUser={updateUser} />
 
-  const addNewEntry = () => {
-    openEdit({
-      date: moment().format("YYYY-MM-DD"),
-      weight: '',
-      calories: '',
-      steps: '',
-    });
-  }
+            <ChartModal user={user} updateUser={updateUser} />
 
-  const openEdit = (entry) => {
-    setEditEntry(entry);
-    setIsEdit(true);
-  }
+            <Container sx={{ padding: 2 }}>{loadEntryView()}</Container>
 
-  const saveEntry = async () => {
-    const newEntries = [...user.entries];
-    if (editEntry.id) {
-      const i = newEntries.findIndex(e => e.id === editEntry.id);
-      newEntries.splice(i, 1, editEntry);
-    } else {
-      newEntries.push({
-        id: uuidv4(),
-        ...editEntry
-      });
-    }
+            {isEdit && (
+                <DayEntryEdit
+                    user={user}
+                    entry={editEntry}
+                    setEntry={setEditEntry}
+                    hideEdit={() => setIsEdit(false)}
+                    open={isEdit}
+                    save={saveEntry}
+                />
+            )}
 
-    updateUser({
-      ...user,
-      entries: sortEntries(newEntries)
-    });
-  }
-
-  const removeEntry = (rEntry) => {
-    updateUser({
-      ...user,
-      entries: user.entries.filter(e => e.id !== rEntry.id)
-    });
-  }
-
-  const updateUser = async (updatedUser) => {
-    setUser(updatedUser);
-    await updatePerson(updatedUser);
-  }
-
-  if (!user) {
-    return <>Loading...</>;
-  }
-
-  // This function reverses the array so we can iterate in day order and calc diff changes from the prev day
-  // Then it reverses again to display in correct order.
-  const loadEntryView = () => {
-    let averages = [];
-    let entries = [...user.entries];
-    entries.reverse();
-    const map = entries.map((e, i) => {
-      let { metrics, updatedAverages } = getDayViewMetrics(user, e, i, averages);
-      averages = updatedAverages;
-
-      return <DayEntryView
-        key={e.id}
-        user={user}
-        entry={e}
-        metrics={metrics}
-        showEdit={() => openEdit(e)}
-        remove={() => removeEntry(e)} />;
-    });
-
-    map.reverse();
-    return map;
-  };
-
-  return (
-    <>
-      <Header user={user} updateUser={updateUser} />
-
-      <ChartModal user={user} updateUser={updateUser} />
-
-      <Container sx={{ padding: 2 }}>{loadEntryView()}</Container>
-
-      {isEdit &&
-      <DayEntryEdit 
-        user={user}
-        entry={editEntry} 
-        setEntry={setEditEntry}
-        hideEdit={() => setIsEdit(false)} 
-        open={isEdit}
-        save={saveEntry} />}
-
-      {!isEdit && 
-      <Fab size="medium" style={fabStyle} color="primary" onClick={addNewEntry}>
-        <AddIcon />
-      </Fab>}
-    </>
-  )
+            {!isEdit && (
+                <Fab size="medium" sx={fabStyle} color="primary" onClick={addNewEntry}>
+                    <AddIcon />
+                </Fab>
+            )}
+        </>
+    );
 }

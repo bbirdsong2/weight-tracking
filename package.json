@@ -11,8 +11,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.9",
-    "@mui/material": "^5.14.8",
+    "@mui/icons-material": "^6.3.0",
+    "@mui/material": "^6.3.0",
+    "@mui/x-date-pickers": "^7.23.3",
+    "dayjs": "^1.11.13",
     "firebase": "^10.4.0",
     "moment": "^2.29.4",
     "next": "13.4.19",
@@ -20,5 +22,8 @@
     "react-dom": "18.2.0",
     "recharts": "^2.8.0",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
   }
 }
