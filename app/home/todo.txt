@@ -1,0 +1,67 @@
+INIT BETA LAUNCH (i.e. replace existing page)
+- Add loading symbols
+- Test it all and make sure user friendly / accurate calculations
+
+ACTUAL LAUNCH
+- Sign up / Register / Login flow
+- Goal Setting / Tracking? Needs thinking / logic
+- Add Charts
+- Sign up / Login
+- Add subscription option
+- Hide Features behind subscription
+
+
+
+
+- Add settings UI
+- Add Activity Level to Metrics? Use in MBR?
+  - not sure if it's needed in MBR, mostly in suggestions
+    - i.e. If your activity level is at max and you platued, time to deload
+- Test adding new user and functionality
+  - test it works, measure correct, and UI is fluid and not buggy
+
+
+
+
+- NOTE: I think I can replace the 2 week Avg Cals with the Calculated MBR, since is is more useful to the user.
+    - and closer to the actual MBR of the person
+- Make it functional and comparable to what exists today
+    - i.e. Add in Settings
+- Clean up code and TEST, code is sloppy right now
+    - Make UI friendly and notify when missing data, did not save, etc.
+- User Registration/Login
+- Then the fun stuff
+    - Can show daily surplus / deficit
+    - MIght need to show 3 days on dash board
+        - Today, Tomorrow, Yesterday
+        - Maybe can simplify dashboard, Show:
+            - Todays Avg. Weight, Yesterdays Avg. weight, and daily diff?
+            - Yesterdays MBR (i.e. just call it MBR), and Today's once intake added, and daily diff
+            - Todays Suggested intake (i.e. the prev days suggestion)
+            - Tomorrows suggested intake
+    - Make some features premium
+        - Charts, Date changing, suggestions/goals, etc.
+        - 2 Charts needed
+          - Sum of Averaged Weight change
+          - Sum of Cal Intake minus MBR
+          - These charts should trend similar
+
+{/* <div>
+  <p>TODO to replace existing UI</p>
+  <p>- Add ability to input/change data</p>
+  <p>- Do settings / profile UI's</p>
+  <p>- Finish login / sign up / get data flow</p>
+  <p>&nbsp;</p>
+  <p>Enhancements to make it Marketable</p>
+  <p>
+    - Think about how to make the app super useful without needing my
+    input
+  </p>
+  <p>- Show tomorrow suggestion based on goal / averages</p>
+  <p>- Add onboarding / intro notes</p>
+  <p>
+    - Add Goal Setting / Feedback on what to eat/do for next day to meet
+    goal
+  </p>
+  <p>- Add Charts</p>
+</div> */}
