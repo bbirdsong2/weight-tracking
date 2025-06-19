@@ -43,6 +43,7 @@ export default function Home() {
     };
 
     const initLoadPerson = async (uid, convert) => {
+        const person = await getPerson(uid);
         if (convert) {
             // This option will convert from the old API to the new one
             // This should be removed once users are moved over and using the new API
@@ -54,11 +55,10 @@ export default function Home() {
                 bodyFatPercentage: personToConvert.bodyFatPercentage,
                 gender: personToConvert.gender,
             };
-            personToConvert.entries = updateEntries(personToConvert.entries.length - 1, personToConvert);
-            changePerson(personToConvert);
-        } else {
-            changePerson(await getPerson(uid));
+            person.settings = personToConvert.settings;
+            person.entries = updateEntries(personToConvert.entries.length - 1, personToConvert);
         }
+        changePerson(person);
     };
 
     const changePerson = (p) => {
