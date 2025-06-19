@@ -3,7 +3,7 @@ import { convertToJs, convertToString, getNowJs } from './dates';
 
 const DEFAULT_DAYS_TO_AVERAGE = 14;
 const DEFAULT_DAYS = 30;
-const CALORIES_IN_POUND = 3500;
+export const CALORIES_IN_POUND = 3500;
 export const CONTAINERS = {
     home: 1,
     data: 2,
@@ -169,7 +169,7 @@ const getDeltas = (i, entries) => {
         const data = sliceEntriesByDate(convertToJs(entries[i].date), d.days + 1, entries);
         // const data = entries.slice(i, i + d.days + 1); // +1 to get the extra day to compare
         // if not enough data, do not calculate
-        if (data.length === d.days + 1) {
+        if (data.length === d.days + 1 && data[0].averages) {
             const val = parseFloat(data[0].averages[prop]) - parseFloat(data[data.length - 1].averages[prop]);
             return !isNaN(val) ? convert(val) : null;
         }

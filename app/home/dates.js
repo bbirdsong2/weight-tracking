@@ -1,17 +1,21 @@
 import dayjs from 'dayjs';
 
 export const convertToString = (date) => {
-  return date.format('YYYY-MM-DD');
+    return date.format('YYYY-MM-DD');
 };
 
 export const convertToJs = (date) => {
-  return dayjs(date);
+    return dayjs(date);
 };
 
 export const getTodayString = () => {
-  return convertToString(getNowJs());
+    return convertToString(getNowJs());
 };
 
 export const getNowJs = () => {
-  return dayjs();
+    return dayjs();
+};
+
+export const subtractDateJs = (dateJs, days) => {
+    return dateJs.subtract(days, 'day');
 };

@@ -9,6 +9,7 @@ import DataContainer from './components/DataContainer';
 import { updateEntries, getHomeData, hydrateDays, sortEntries, CONTAINERS } from './util';
 import { getPerson as gp2 } from './data';
 import { addPerson, getPerson, updatePerson } from './database/firebase';
+import { getPerson as oldGetPerson } from '../database/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import SettingContainer from './components/SettingContainer';
 import ChartContainer from './components/ChartContainer';
@@ -41,8 +42,23 @@ export default function Home() {
         // changePerson(newPerson);
     };
 
-    const initLoadPerson = async (uid) => {
-        changePerson(await getPerson(uid));
+    const initLoadPerson = async (uid, convert) => {
+        if (convert) {
+            // This option will convert from the old API to the new one
+            // This should be removed once users are moved over and using the new API
+            /** @type {any} */
+            const personToConvert = await oldGetPerson(uid);
+            personToConvert.settings = {
+                activityModifier: personToConvert.activityModifier,
+                birthDate: personToConvert.birthDate,
+                bodyFatPercentage: personToConvert.bodyFatPercentage,
+                gender: personToConvert.gender,
+            };
+            personToConvert.entries = updateEntries(personToConvert.entries.length - 1, personToConvert);
+            changePerson(personToConvert);
+        } else {
+            changePerson(await getPerson(uid));
+        }
     };
 
     const changePerson = (p) => {
@@ -95,7 +111,8 @@ export default function Home() {
 
     useEffect(() => {
         const userId = searchParams.get('uid');
-        initLoadPerson(userId);
+        const convert = searchParams.get('convert');
+        initLoadPerson(userId, convert);
     }, []);
 
     return (
