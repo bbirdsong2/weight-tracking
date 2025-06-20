@@ -82,14 +82,17 @@ export default function ChartContainer({ person, updateSettings, setContainer })
 
     return (
         <>
-            <Box sx={{ marginBottom: 2, display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ marginBottom: 3, display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ flexGrow: 1 }}>
-                    <DatePicker label="Start Date" value={startDate} onChange={changeDate} />
-                    <DatePicker sx={{ marginLeft: 1 }} label="End Date" value={endDate} onChange={setEndDate} />
+                    <Fab size="medium" onClick={changeContainer}>
+                        <ArrowBackIosNew />
+                    </Fab>
                 </Box>
-                <Fab size="medium" onClick={changeContainer}>
-                    <ArrowBackIosNew />
-                </Fab>
+            </Box>
+
+            <Box sx={{ marginBottom: 2, display: 'flex', alignItems: 'center' }}>
+                <DatePicker label="Start Date" value={startDate} onChange={changeDate} />
+                <DatePicker sx={{ marginLeft: 1 }} label="End Date" value={endDate} onChange={setEndDate} />
             </Box>
 
             <Card>
